@@ -43,6 +43,8 @@ npm run build-web
 Node.js服务器：(可以使用pm2来启动)
 ```
 npm run start-node
+//pm2启动
+npm run pm2-start
 ```
 
 # 项目结构树

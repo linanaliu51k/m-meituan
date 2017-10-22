@@ -7,7 +7,8 @@
     "dev-web": "cross-env NODE_ENV=dev webpack-dev-server --progress --colors --open",
     "dev-node": "cross-env NODE_ENV=dev nodemon server.js",
     "build-web": "cross-env NODE_ENV=production webpack -p --config ./webpack.production.config.js --progress --colors",
-    "start-node": "cross-env NODE_ENV=production node server.js"
+    "start-node": "cross-env NODE_ENV=production node server.js",
+    "pm2-start": "cross-env NODE_ENV=production pm2 start server.js"
   },
   "author": "",
   "license": "ISC",
