@@ -1,5 +1,5 @@
 import React from 'react'
-import { HashRouter as Router, Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 import Home from '../containers/Home'
 import City from '../containers/City'
@@ -13,7 +13,9 @@ import NotFound from '../containers/404'
 // 参见 https://github.com/reactjs/react-router/tree/master/examples/huge-apps
 
 class RouterMap extends React.Component {
+
     render() {
+        console.log(Router);
         return (
             <Router>
                 <Switch>
