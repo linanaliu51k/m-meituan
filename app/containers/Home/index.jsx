@@ -6,27 +6,32 @@ import HomeHeader from '../../components/HomeHeader'
 import Category from '../../components/Category'
 import Ad from './subpage/Ad.jsx';
 import List from './subpage/List.jsx';
+import * as actions from "../../redux/actions/home.js";
 
-class Home extends React.Component {
+@connect(
+    state => ({
+        ...state
+    }),
+    actions
+)
+export default class Home extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     }
+    componentDidMount () {
+        this.props.getAd();
+        this.props.getList();
+    }
     render() {
         return (
             <div>
-                <HomeHeader cityName={this.props.userinfo.cityName} history={this.props.history}/>
+                <HomeHeader cityName={this.props.common.currentCity} history={this.props.history}/>
                 <Category/>
                 <div style={{height: '15px'}}></div>
-                <Ad/>
-                <List cityName={this.props.userinfo.cityName}/>
+                <Ad data={this.props.home.ads}/>
+                <List data={this.props.home.list} cityName={this.props.common.currentCity} loadMoreFn={this.props.getList}/>
             </div>
         )
     }
 }
-
-export default connect(
-    state => ({
-        userinfo: state.userinfo
-    })
-)(Home);

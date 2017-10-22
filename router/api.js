@@ -104,7 +104,6 @@ module.exports = (router) => {
     // 提交评论
     router.post('/api/submitComment', async (ctx, next) => {
         console.log('提交评论')
-
         // 获取参数
 
         ctx.body = {
@@ -112,5 +111,4 @@ module.exports = (router) => {
             msg: 'ok'
         }
     })
-
 }

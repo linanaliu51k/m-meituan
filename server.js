@@ -1,6 +1,6 @@
 const Koa = require('koa');
 const app = new Koa();
-const port = 3000;
+const port = 4000;
 const path = require('path');
 const convert = require('koa-convert');
 
@@ -9,7 +9,7 @@ const serve = require('koa-static-server');
 const bodyParser = require('koa-bodyparser');
 
 let isDev = process.env.NODE_ENV === 'develop';//是否是开发环境
-console.log(isDev);
+
 app.use(bodyParser()); //解析HTTP请求体
 app.use(convert(cors())); //允许跨域
 app.use(async (ctx, next) => {
@@ -17,7 +17,6 @@ app.use(async (ctx, next) => {
     await next();
 });
 require('./router')(app); //初始化路由信息
-var router = require('koa-router')();
 
 !isDev && app.use(serve({rootDir: path.join(__dirname, './dist'), rootPath: '/'}));//线上的静态路由
 

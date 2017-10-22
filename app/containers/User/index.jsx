@@ -5,30 +5,30 @@ import Header from '../../components/Header';
 import UserInfo from "../../components/UserInfo";
 import OrderList from './subpage/OrderList.jsx';
 
-class User extends React.Component {
+@connect(
+    state => ({
+        ...state.common
+    })
+)
+export default class User extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     }
     render() {
-        const userinfo = this.props.userinfo;
+        const username = this.props.username;
+        const cityName = this.props.currentCity;
         return (
             <div>
                 <Header title="用户主页" backRouter="/"/>
-                <UserInfo username={userinfo.username} city={userinfo.cityName}/>
-                <OrderList username={userinfo.username}/>
+                <UserInfo username={username} city={cityName}/>
+                <OrderList username={username}/>
             </div>
         )
     }
     componentDidMount() {
-        if (!this.props.userinfo.username) {
+        if (!this.props.username) {
             this.props.history.push('/Login');
         }
     }
 }
-
-export default connect(
-    state => ({
-        userinfo: state.userinfo
-    })
-)(User);

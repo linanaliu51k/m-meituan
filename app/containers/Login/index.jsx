@@ -1,11 +1,17 @@
 import React from 'react'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import {connect} from 'react-redux';
-import * as actions from '../../actions/userinfo.js';
+import * as actions from '../../redux/actions/common.js';
 import Header from '../../components/Header';
 import LoginComponent from '../../components/Login';
 
-class Login extends React.Component {
+@connect(
+    state => ({
+        ...state.common
+    }),
+    actions
+)
+export default class Login extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
@@ -24,9 +30,8 @@ class Login extends React.Component {
         )
     }
     loginHandle = (username) => {
-        let userinfo = this.props.userinfo;
-        userinfo.username = username;
-        this.props.update(userinfo);
+
+        this.props.setUsername(username);
 
         const params = this.props.match.params;
         const router = params.router;
@@ -34,15 +39,15 @@ class Login extends React.Component {
         if (router) {
             this.props.history.push(decodeURIComponent(router));
         } else {
-            this.goUserPage();;
+            this.goUserPage();
         }
     }
     componentDidMount() {
         this.doCheck();
     }
     doCheck() {
-        const userinfo = this.props.userinfo;
-        if (userinfo.username) {
+        const username = this.props.username;
+        if (username) {
             this.goUserPage()
         } else {
             this.setState({
@@ -54,10 +59,3 @@ class Login extends React.Component {
         this.props.history.push('/User');
     }
 }
-
-export default connect(
-    state => ({
-        userinfo: state.userinfo
-    }),
-    actions
-)(Login);

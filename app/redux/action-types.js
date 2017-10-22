@@ -1,0 +1,26 @@
+//收藏功能
+export const STORE_UPDATE = 'STORE_UPDATE';
+export const STORE_ADD = 'STORE_ADD';
+export const STORE_RM = 'STORE_RM';
+
+//首页
+export const GET_HOME_LIST = 'GET_LIST';
+export const GET_HOME_AD = 'GET_HOME_AD';
+export const SET_LOADING_STATUS = "SET_LOADING_STATUS";
+
+//App组件中
+export const SET_CURRENT_CITY = 'SET_CURRENT_CITY';
+export const SET_USERNAME = 'SET_USERNAME';
+
+//搜索页
+export const GET_SEARCH_LIST = 'GET_SEARCH_LIST';
+export const SET_SEARCH_LOADING_STATUS = 'SET_SEARCH_LOADING_STATUS';
+export const INIT_SEARCH_LIST = 'INIT_SEARCH_LIST';
+
+//详情页
+export const GET_DETAIL_INFO = 'GET_DETAIL_INFO';
+export const GET_DETAIL_COMMENT = 'GET_DETAIL_COMMENT';
+export const SET_COMMENT_LOADING_STATUS = 'SET_COMMENT_LOADING_STATUS';
+
+//个人中心页
+export const GET_USER_ORDER_LISTS = 'GET_USER_ORDER_LISTS';

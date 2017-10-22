@@ -4,34 +4,32 @@ import { connect } from 'react-redux'
 
 import ListCompoent from '../../../components/List'
 import LoadMore from '../../../components/LoadMore'
+import * as actions from '../../../redux/actions/search.js';
+// import { getSearchData } from '../../../fetch/search/search'
 
-import { getSearchData } from '../../../fetch/search/search'
-
-// 初始化一个组件的 state
-const initialState = {
-    data: [],
-    hasMore: false,
-    isLoadingMore: false,
-    page: 0
-}
-
-class SearchList extends React.Component {
+@connect(
+    state => ({
+        ...state
+    }),
+    actions
+)
+export default class SearchList extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-        this.state = initialState
     }
     render() {
+        const list = this.props.search;
         return (
             <div>
                 {
-                    this.state.data.length
-                    ? <ListCompoent data={this.state.data}/>
-                    : <div>{/* 加载中... */}</div>
+                    list.data.length
+                    ? <ListCompoent data={list.data}/>
+                    : <div>加载中</div>
                 }
                 {
-                    this.state.hasMore
-                    ? <LoadMore isLoadingMore={this.state.isLoadingMore} loadMoreFn={this.loadMoreData.bind(this)}/>
+                    list.hasMore
+                    ? <LoadMore isLoadingMore={list.isLoadingMore} loadMoreFn={this.loadMoreData}/>
                     : ''
                 }
             </div>
@@ -39,80 +37,27 @@ class SearchList extends React.Component {
     }
     componentDidMount() {
         // 获取首页数据
-        this.loadFirstPageData()
-    }
-    // 获取首页数据
-    loadFirstPageData() {
-        const cityName = this.props.userinfo.cityName
-        const keyword = this.props.keyword || ''
-        const category = this.props.category
-        const result = getSearchData(0, cityName, category, keyword)
-        this.resultHandle(result)
+        setTimeout(() => {
+            this.props.getSearchList();
+        }, 1000);
     }
     // 加载更多数据
-    loadMoreData() {
-        // 记录状态
-        this.setState({
-            isLoadingMore: true
-        })
-
-        const cityName = this.props.userinfo.cityName
-        const page = this.state.page
-        const keyword = this.props.keyword || ''
-        const category = this.props.category
-        const result = getSearchData(page, cityName, category, keyword)
-        this.resultHandle(result)
-
-        // 更新状态
-        this.setState({
-            isLoadingMore: false
-        })
-    }
-    // 处理数据
-    resultHandle(result) {
-        // 增加 page 计数
-        const page = this.state.page
-        this.setState({
-            page: page + 1
-        })
-
-        result.then(res => {
-            return res.json()
-        }).then(json => {
-            const hasMore = json.hasMore
-            const data = json.data
-
-            this.setState({
-                hasMore: hasMore,
-                data: this.state.data.concat(data)
-            })
-        }).catch(ex => {
-            if (__DEV__) {
-                console.error('搜索页获取数据报错, ', ex.message)
-            }
-        })
+    loadMoreData = () => {
+        this.props.getSearchList();
     }
     // 处理重新搜索
     componentDidUpdate(prevProps, prevState) {
         const keyword = this.props.keyword
         const category = this.props.category
-
         // 搜索条件完全相等时，忽略。重要！！！
         if (keyword === prevProps.keyword && category === prevProps.category) {
-            return
+            return;
         }
-
-        // 重置 state
-        this.setState(initialState)
-
+        //重置数据
+        this.props.initSearchList();
         // 重新加载数据
-        this.loadFirstPageData()
+        setTimeout(() => {
+            this.props.getSearchList();
+        }, 1000);
     }
 }
-
-export default connect(
-    state => ({
-        userinfo: state.userinfo
-    }),
-    dispatch => ({})
-)(SearchList)

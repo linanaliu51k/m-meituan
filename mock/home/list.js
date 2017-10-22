@@ -11,7 +11,7 @@ module.exports = {
             id: Math.random().toString().slice(2)
         },
         {
-            img: '//p0.meituan.net/200.0/deal/c2531a33de60bb1a119a8fa653143ac632535.jpg',
+            img: '//p0.meituan.net/200.0/deal/fb2b8f65ea285d77848f2571642031f641701.jpg',
             title: '北京开源饭店',
             subTitle: '[望京]自助晚餐',
             price: '98',

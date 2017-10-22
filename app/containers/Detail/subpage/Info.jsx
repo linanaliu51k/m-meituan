@@ -1,37 +1,32 @@
 import React from 'react'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
-import { getInfoData } from '../../../fetch/detail/detai.js';
+// import { getInfoData } from '../../../fetch/detail/detai.js';
 import DetailInfo from '../../../components/DetailInfo';
+import {connect} from 'react-redux';
+import * as actions from '../../../redux/actions/detail.js';
 
-class Info extends React.Component {
+@connect(
+    state => ({
+        ...state
+    }),
+    actions
+)
+export default class Info extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-        this.state = {
-            info: false
-        }
     }
     render() {
-
+        const info = this.props.detail.info;
         return (
             <div>
                 {
-                    this.state.info ? <DetailInfo data={this.state.info}/> : ''
+                    info ? <DetailInfo data={info}/> : ''
                 }
             </div>
         )
     }
     componentDidMount() {
-        var id = this.props.id;
-        var result = getInfoData(id);
-        result.then(res =>
-            res.json()
-        ).then(json => {
-            this.setState({
-                info: json
-            });
-        })
+        this.props.getInfoList();
     }
 }
-
-export default Info

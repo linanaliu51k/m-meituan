@@ -1,4 +1,4 @@
-import * as actionTypes from '../constants/store.js';
+import * as actionTypes from '../action-types.js';
 
 export function update(data) {
     return {

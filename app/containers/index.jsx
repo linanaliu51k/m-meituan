@@ -2,12 +2,15 @@ import React from 'react'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import localStore from '../util/localStore';
 import { CITY_NAME } from '../config/localStoreKey.js';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as userInfoActions from '../actions/userinfo.js';
 import RouterMap from '../router/routeMap.jsx';
+import * as actions from '../redux/actions/common.js';
 
-class App extends React.Component {
+@connect(
+   state => ({}),
+   actions
+)
+export default class App extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
@@ -29,18 +32,9 @@ class App extends React.Component {
         if (cityName == null) {
             cityName = '北京';
         }
-        this.props.userInfoActions.update({
-            cityName
-        });
+        this.props.setCurrentCity(cityName);
         this.setState({
             initDone: true
         });
     }
 }
-
-export default connect(
-    state => ({}),
-    dispatch => ({
-        userInfoActions : bindActionCreators(userInfoActions, dispatch)
-    })
-)(App);

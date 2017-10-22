@@ -2,7 +2,7 @@ import React from 'react'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import BuyAndStore from '../../../components/BuyAndStore';
 import {withRouter} from 'react-router-dom';
-import * as actions from '../../../actions/store.js';
+import * as actions from '../../../redux/actions/store.js';
 import {connect} from 'react-redux';
 
 class Buy extends React.Component {
@@ -15,7 +15,6 @@ class Buy extends React.Component {
     }
 
     render() {
-
         return (
             <div>
                 <BuyAndStore isStore={this.state.isStore} buyHandle={this.buyHandle} storeHandle={this.storeHandle}/>
@@ -86,7 +85,7 @@ class Buy extends React.Component {
 
 export default connect(
     state => ({
-        userinfo: state.userinfo,
+        userinfo: state.common,
         store: state.store
     }),
     actions

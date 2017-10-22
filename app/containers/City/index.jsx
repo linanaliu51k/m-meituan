@@ -6,11 +6,15 @@ import CurrentCity from '../../components/CurrentCity';
 import CityList from '../../components/CityList';
 import localStore from '../../util/localStore';
 import { CITY_NAME } from '../../config/localStoreKey.js';
-import { bindActionCreators } from 'redux';
-import * as userInfoActions from '../../actions/userinfo.js';
-import * as router from 'react-router-dom';
+import * as actions from '../../redux/actions/common.js';
 
-class City extends React.Component {
+@connect(
+    state => ({
+        currentCity: state.common.currentCity
+    }),
+    actions
+)
+export default class City extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
@@ -19,7 +23,7 @@ class City extends React.Component {
         return (
             <div>
                 <Header title="选择城市"/>
-                <CurrentCity cityName={this.props.userinfo.cityName}/>
+                <CurrentCity cityName={this.props.currentCity}/>
                 <CityList changeFn={this.changeCity.bind(this)}/>
             </div>
         )
@@ -29,9 +33,7 @@ class City extends React.Component {
             return
         }
         //修改redux
-        const userinfo = this.props.userinfo;
-        userinfo.cityName = newCity;
-        this.props.userInfoActions.update(userinfo);
+        this.props.setCurrentCity(newCity);
 
         //修改localStorage
         localStore.setItem(CITY_NAME, newCity);
@@ -40,12 +42,3 @@ class City extends React.Component {
         this.props.history.push('/');
     }
 }
-
-export default connect(
-    state => ({
-        userinfo: state.userinfo
-    }),
-    dispatch => ({
-        userInfoActions: bindActionCreators(userInfoActions, dispatch)
-    })
-)(City);

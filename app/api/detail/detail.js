@@ -1,12 +1,12 @@
-import { get } from '../get';
+import { get } from '../index.js';
 import Config from "../../config/index.js";
 
-export function getInfoData(id) {
+export function getInfoDatas(id) {
    const result = get(Config.host + '/api/detail/info/' + id)
    return result
 }
 
-export function getCommentData(page, id) {
+export function getCommentDatas(page, id) {
     const result = get(Config.host + '/api/detail/comment/' + page + '/' + id)
     return result
 }
