@@ -163,6 +163,82 @@ npm run pm2-start
 - swipe-js-iso：基于swipe.js的一个插件
 - whatwg-fetch：fetch
 
+#react 开发相关内容
+## react 短路式性能优化
+即利用shouldComponentUpdate来进行优化:
+有两个前提：
+- 1.组件本身的render方法是参数state与props的纯函数，即对于未变化的state与props， render方法将返回相同的结果.
+- 2.state及props是不可变的。
+
+## 反模式
+> 反模式，指在实践中出现但又低效或是有待优化的设计模式，是用来解决问题的带有共同性的不良方法.
+- 基于props得到state (推荐：state与props应该是正交的)
+- 滥用refs获取子组件(组件数据传递应该通过props，而不是直接取得子组件的实例)
+- 冗余事实. (对于state中的数据设计要合理，尽量清晰，不要冗余)
+- 组件的隐式数据源(例如require另一个模块，这个模块可能是一个全局的事件触发器，也可能是一个model实现, react
+组件方案提供了清晰的数据传入方式: props与context，但context绝大多数不会用到)
+> 在组件的render方法或store的reducer实现中，触发action或调用组件的setState、操作DOM或发送AJAX请求等行为，都是反模式的.
+
+## 性能优化
+- 优化原则
+> 1.避免过早优化(在开发完成后，再决定是否需要优化)
+> 2. 着眼瓶颈(找到瓶颈所在，一些小的优化可以不做，否则过度的优化可能带来其他方面的问题)
+
+- 性能分析
+> 可以使用react-addons-perf模块
+```
+import Perf from 'react-addons-perf';
+window.Perf = Perf;
+Perf.start()//开始测试
+Perf.stop()//结束测试
+var measurements = Perf.getLastMeasurements();//得到测量的结果数据. 可以将measurements 传入以下方法.
+printInclusive() //打印总体花费时间
+printExclusive()
+printWasted() //打印出浪费了的时间
+printOperations //打印最终发生的真实DOM操作.
+```
+
+- 生成环境版本
+- 避免不必要的render
+> 1. shouldComponentUpdate 在这个钩子函数里面直接对新旧属性和状态进行比较，都完全相同返回false，否则返回true
+> 2. Minin 与 Hoc
+```
+//使用react-addons-pure-render-mixin
+//es5 使用mixins方式.
+//es6 在constructor里面重写shouldComponentUpdate
+//使用react-addons-shallow-compare(与上面一种本质上一样)
+import shallowCompare from 'react-addons-shallow-compare';
+shouldComponentUpdate(this, nextProps, nextState) {
+	return shallowCompare(this, nextProps, nextState);
+}
+//或者 recompose模块 高级组件方式
+```
+>3.不可变数据
+```
+//使用immutable.js来创建并操作不可变数据结构
+import Immutable from 'immutable';
+const map1 = Immutable.Map({a: 1, b: 2, c: 3});
+const map2 = map1.set('b', 50);
+map1.get('b');// 2
+map2.get('b');//50
+```
+- 合理拆分组件
+> 合理拆分组件也有助于提升应用的性能.
+
+- 合理使用组件内部state
+> 不一定将所有数据存到redux中，可以在组件内部有自己的state。合理使用.
+
+## 社区产物
+- Flux及其实现
+- Flux Standard Action
+- Ducks
+- GraphQL/Relay 与 Falcor
+- 副作用的处理
+> 1. action creator中的副作用.
+> 副作用往往是伴随多次的、异步的action创建与触发。可以使用redux-thunk中间件来实现异步action，它可以允许获取store.dispatch, 也可以允许返回一个函数而不是action对象. 但是过多的action creator 就会造成问题，变得不可控
+> 2. middleware中的副作用.
+> 如果想解决之前action creator中的副作用，可以使用redux-saga .也是一个中间件. 副作用的组织与管理，是一个应用复杂度达到一定程度时需要考虑的问题，使用redux-saga会有不小的引入代价，大部分时候，redux-thunk, redux-promise这样的方案就足以满足要求了。真遇到这个问题，再去尝试高级解决方案.
+
 # todo
 - 后端只是简单数据模拟，以后可以将数据存储到mongodb中.
 - 实现完善的登录注册等等...
