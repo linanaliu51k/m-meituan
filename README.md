@@ -163,7 +163,7 @@ npm run pm2-start
 - swipe-js-iso：基于swipe.js的一个插件
 - whatwg-fetch：fetch
 
-#react 开发相关内容
+# react 开发相关内容
 ## react 短路式性能优化
 即利用shouldComponentUpdate来进行优化:
 有两个前提：
